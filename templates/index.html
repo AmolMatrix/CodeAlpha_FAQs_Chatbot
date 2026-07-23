@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SGMCOE FAQ Chatbot</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <div class="chat-container">
+    <div class="chat-header">
+      <div class="header-avatar">🎓</div>
+      <div>
+        <h1>SGMCOE FAQ Assistant</h1>
+        <p><span class="status-dot"></span>Online — ask me about admissions, courses, fees & more</p>
+      </div>
+      <button id="clear-btn" title="Clear chat">🗑</button>
+    </div>
+
+    <!-- Category tabs -->
+    <div class="category-tabs" id="category-tabs">
+      <button class="tab active" data-cat="all">All</button>
+      {% for cat in categories.keys() %}
+        <button class="tab" data-cat="{{ cat }}">{{ cat }}</button>
+      {% endfor %}
+    </div>
+
+    <!-- Suggested questions dashboard -->
+    <div class="suggestions" id="suggestions">
+      {% for cat, qs in categories.items() %}
+        <div class="chip-group" data-group="{{ cat }}">
+          {% for q in qs %}
+            <button class="chip" onclick="askSuggested(this)">{{ q }}</button>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Chat messages -->
+    <div class="chat-box" id="chat-box">
+      <div class="message bot">
+        <!-- <div class="avatar">🤖</div>
+        <div class="bubble">
+          Hi! I'm the SGMCOE FAQ Assistant. Tap a category above, click a
+          suggested question, or type your own — I'll do my best to help!
+        </div> -->
+      </div>
+    </div>
+
+    <!-- Typing indicator -->
+    <div class="typing-indicator" id="typing-indicator">
+      <div class="avatar">🤖</div>
+      <div class="dots"><span></span><span></span><span></span></div>
+    </div>
+
+    <!-- Input area -->
+    <form class="chat-input" id="chat-form">
+      <input type="text" id="user-input" placeholder="Type your question..." autocomplete="off" required>
+      <button type="submit">➤</button>
+    </form>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
