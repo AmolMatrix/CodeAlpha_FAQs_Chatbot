@@ -1,43 +1,12 @@
-"""
-AI-Powered FAQ Chatbot with Semantic Search (lightweight edition)
--------------------------------------------------------------------
-A simple Flask app that answers user questions by comparing the
-meaning of the question with a stored list of FAQs, using classic
-NLP (TF-IDF + Cosine Similarity) instead of a heavy deep-learning
-model. This avoids large dependencies like sentence-transformers /
-PyTorch that can fail to install on very new Python versions.
-
-How it works (step by step):
-1. On startup, we load faqs.json (list of question/answer pairs).
-2. We clean each FAQ question (lowercase, remove symbols, lemmatize)
-   using NLTK.
-3. We build a vocabulary from all FAQ questions and convert every
-   question into a TF-IDF vector (a list of numbers where common
-   words get low weight and distinctive words get high weight).
-4. When a user sends a message, it goes through the same cleaning +
-   TF-IDF steps, using the SAME vocabulary built in step 3.
-5. We compare the user's vector with every FAQ vector using Cosine
-   Similarity (a score between 0 and 1 showing how close two pieces
-   of text are in meaning/word-usage).
-6. We pick the FAQ with the highest similarity score. If that score
-   is above a threshold, we return its answer + confidence score.
-   Otherwise we return a fallback "I don't know" message.
-"""
-
 import json
 import os
 import re
-
 import numpy as np
 from flask import Flask, jsonify, render_template, request
-
 import nltk
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 
-# ---------------------------------------------------------------------
-# 1. One-time NLTK setup (downloads small language data files)
-# ---------------------------------------------------------------------
 NLTK_PACKAGES = ["punkt", "punkt_tab", "wordnet", "omw-1.4"]
 for pkg in NLTK_PACKAGES:
     try:
